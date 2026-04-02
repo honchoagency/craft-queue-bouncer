@@ -1,30 +1,60 @@
-# Queue Bouncer
+![Banner](./docs/img/banner.png)
 
-Prevent repeat jobs from being added to the queue
+# Queue Bouncer for Craft CMS
 
-## Requirements
+A Craft CMS plugin that prevents duplicate jobs from piling up in the queue. If a matching job is already pending or running, Queue Bouncer skips the callback silently.
 
-This plugin requires Craft CMS 5.8.0 or later, and PHP 8.2 or later.
+## The Problem
 
-## Installation
+Cron-triggered jobs can overlap. For example if a regular FeedMe import takes longer than its cron interval, a second job gets queued before the first finishes. Over time this creates a backlog that compounds the problem.
 
-You can install this plugin from the Plugin Store or with Composer.
+Queue Bouncer sits in front of your cron commands and acts as a gatekeeper - only running the callback function if there are no matching jobs in the queue.
 
-#### From the Plugin Store
+## Configuration
 
-Go to the Plugin Store in your project’s Control Panel and search for “Queue Bouncer”. Then press “Install”.
+Copy `config.php` to `config/queuebouncer.php` and define your guarded jobs:
 
-#### With Composer
+```php
+// example configuration
+return [
+    'feed-me-import' => [
+        'jobClasses' => [
+            \craft\feedme\queue\jobs\FeedImport::class,
+        ],
+        'callback' => function () {
+            $feed = FeedMe::getInstance()->getFeeds()->getFeedById(1);
+            if ($feed) {
+                Queue::push(new FeedImport(['feed' => $feed]));
+            }
+        },
+    ],
+];
+```
 
-Open your terminal and run the following commands:
+Each top-level key is an identifier you pass to the console command. A config entry can have:
+
+| Key | Description |
+|-----|-------------|
+| `jobClasses` | Array of fully-qualified queue job class names to check. The callback is skipped if **any** of these are pending or running. |
+| `callback` | PHP callable invoked when the bouncer gives the green light. Omit it if you'd rather chain commands with `&&` in cron. |
+
+## Usage
+
+Replace your existing cron command with the Queue Bouncer equivalent:
 
 ```bash
-# go to the project directory
-cd /path/to/my-project.test
+# Before
+php craft feed-me/feeds/queue 1
 
-# tell Composer to load the plugin
-composer require honcho/craft-queue-bouncer
-
-# tell Craft to install the plugin
-./craft plugin/install queue-bouncer
+# After
+php craft queue-bouncer/queue feed-me-import
 ```
+
+Queue Bouncer will:
+1. Check the Craft queue for any pending or in-progress jobs matching the configured `jobClasses`.
+2. If a match is found, exit (no duplicate queued).
+3. If the queue is clear, invoke the `callback`.
+
+## License
+
+MIT
