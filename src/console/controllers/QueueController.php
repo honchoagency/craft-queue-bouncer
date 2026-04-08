@@ -13,8 +13,8 @@ use yii\console\ExitCode;
  * Checks whether a queue job is already running before invoking a callback.
  *
  * Usage:
- *   php craft _queue-bouncer/queue/run blitz-refresh-expired
- *   php craft _queue-bouncer/queue/run lantern-flush
+ *   php craft queue-bouncer/queue/run feed-me-import
+ *   php craft queue-bouncer/queue/run blitz-refresh
  */
 class QueueController extends Controller
 {
@@ -23,6 +23,11 @@ class QueueController extends Controller
     /**
      * Checks the Craft queue for any matching in-progress or pending jobs.
      * If found, skips silently. If not found, invokes the configured callback.
+     *
+     * Skip logic is evaluated in this order:
+     *   1. `skipIf`     — a callable returning true to skip (full custom logic)
+     *   2. `skipClasses` — array of job class names; skips if any are in the queue
+     *   3. `jobClasses`  — deprecated alias for `skipClasses`
      */
     public function actionRun(string $key): int
     {
@@ -34,11 +39,22 @@ class QueueController extends Controller
         }
 
         $entry = $config[$key];
-        $jobClasses = $entry['jobClasses'] ?? [];
 
-        if (!empty($jobClasses) && QueueBouncer::getInstance()->queue->isJobInQueue($jobClasses)) {
-            $this->stdout("Queue Bouncer: skipping \"$key\" — job already in queue.\n");
-            return ExitCode::OK;
+        if (isset($entry['skipIf']) && is_callable($entry['skipIf'])) {
+            // Custom skip logic — the programmer owns the check entirely.
+            if (($entry['skipIf'])()) {
+                $this->stdout("Queue Bouncer: skipping \"$key\" — skipIf returned true.\n");
+                return ExitCode::OK;
+            }
+        } else {
+            // Convenience shorthand: skip if any of the listed job classes are in the queue.
+            // `jobClasses` is a deprecated alias for `skipClasses`.
+            $skipClasses = $entry['skipClasses'] ?? $entry['jobClasses'] ?? [];
+
+            if (!empty($skipClasses) && QueueBouncer::getInstance()->queue->isJobInQueue($skipClasses)) {
+                $this->stdout("Queue Bouncer: skipping \"$key\" — job already in queue.\n");
+                return ExitCode::OK;
+            }
         }
 
         if (!isset($entry['callback']) || !is_callable($entry['callback'])) {
