@@ -43,7 +43,7 @@ return [
             //     ->from(\craft\db\Table::QUEUE)
             //     ->where(['fail' => false])
             //     ->andWhere(['like', 'job', 'FeedImport'])
-            //     ->andWhere(['like', 'job', '"feedId";i:17'])
+            //     ->andWhere(['like', 'job', '"id";i:17'])
             //     ->count();
             // return $count > 0;
             return false;

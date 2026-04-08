@@ -51,7 +51,7 @@ Each top-level key is an identifier you pass to the console command. A config en
             ->from(\craft\db\Table::QUEUE)
             ->where(['fail' => false])
             ->andWhere(['like', 'job', 'FeedImport'])
-            ->andWhere(['like', 'job', '"feedId";i:17'])
+            ->andWhere(['like', 'job', '"id";i:17'])
             ->exists();
     },
     'callback' => function () {
@@ -68,7 +68,7 @@ Each top-level key is an identifier you pass to the console command. A config en
             ->from(\craft\db\Table::QUEUE)
             ->where(['fail' => false])
             ->andWhere(['like', 'job', 'FeedImport'])
-            ->andWhere(['like', 'job', '"feedId";i:42'])
+            ->andWhere(['like', 'job', '"id";i:42'])
             ->exists();
     },
     'callback' => function () {
