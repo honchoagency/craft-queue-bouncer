@@ -1,8 +1,14 @@
 {
-  "name": "honcho/craft-queue-bouncer",
+  "name": "honchoagency/craft-queue-bouncer",
   "description": "Prevent repeat jobs from being added to the queue",
   "type": "craft-plugin",
   "license": "mit",
+    "authors": [
+    {
+      "name": "honchoagency",
+      "homepage": "https://honcho.agency"
+    }
+  ],
   "support": {
     "email": "dev@honcho.agency",
     "issues": "https://github.com/honchoagency/craft-queue-bouncer/issues?state=open",
@@ -20,15 +26,16 @@
   },
   "autoload": {
     "psr-4": {
-      "honcho\\craftqueuebouncer\\": "src/"
+      "honchoagency\\craftqueuebouncer\\": "src/"
     }
   },
   "extra": {
     "handle": "queue-bouncer",
     "name": "Queue Bouncer",
-    "developer": "Honcho",
+    "developer": "Honcho Agency",
+    "developerUrl": "https://honcho.agency",
     "documentationUrl": "https://github.com/honchoagency/craft-queue-bouncer",
-    "class": "honcho\\craftqueuebouncer\\QueueBouncer"
+    "class": "honchoagency\\craftqueuebouncer\\QueueBouncer"
   },
   "scripts": {
     "check-cs": "ecs check --ansi",
