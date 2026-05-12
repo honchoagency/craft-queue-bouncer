@@ -35,7 +35,7 @@ return [
     // one per feed. skipIf receives no arguments — query whatever you need.
     'example-advanced' => [
         'skipIf' => function () {
-            // return \honcho\craftqueuebouncer\QueueBouncer::getInstance()
+            // return \honchoagency\craftqueuebouncer\QueueBouncer::getInstance()
             //     ->queue->isJobInQueue([\craft\feedme\jobs\FeedImport::class]);
 
             // Or write your own query:

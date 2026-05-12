@@ -1,10 +1,10 @@
 <?php
 
-namespace honcho\craftqueuebouncer;
+namespace honchoagency\craftqueuebouncer;
 
 use Craft;
 use craft\base\Plugin;
-use honcho\craftqueuebouncer\services\QueueService;
+use honchoagency\craftqueuebouncer\services\QueueService;
 
 /**
  * Queue Bouncer plugin

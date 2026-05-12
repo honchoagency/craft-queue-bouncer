@@ -1,10 +1,10 @@
 <?php
 
-namespace honcho\craftqueuebouncer\console\controllers;
+namespace honchoagency\craftqueuebouncer\console\controllers;
 
 use Craft;
 use craft\console\Controller;
-use honcho\craftqueuebouncer\QueueBouncer;
+use honchoagency\craftqueuebouncer\QueueBouncer;
 use yii\console\ExitCode;
 
 /**

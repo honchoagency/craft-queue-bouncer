@@ -1,6 +1,6 @@
 <?php
 
-namespace honcho\craftqueuebouncer\services;
+namespace honchoagency\craftqueuebouncer\services;
 
 use craft\base\Component;
 use craft\db\Table;
