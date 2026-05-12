@@ -1,5 +1,11 @@
 # Release Notes for Queue Bouncer
 
+## 1.0.3 - 2026-05-12
+
+### Fixed
+
+- Fix incorrect namespacing issue causing CLI error
+
 ## 1.0.2 - 2026-05-12
 
 ### Fixed

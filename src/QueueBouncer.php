@@ -31,7 +31,7 @@ class QueueBouncer extends Plugin
         parent::init();
 
         if (Craft::$app->getRequest()->getIsConsoleRequest()) {
-            $this->controllerNamespace = 'honcho\\craftqueuebouncer\\console\\controllers';
+            $this->controllerNamespace = 'honchoagency\\craftqueuebouncer\\console\\controllers';
         }
     }
 }
